@@ -953,13 +953,61 @@ nav { padding: 1rem 1.25rem; }
     </div>
   </nav>
 
-  <div class="hero">
+ <div class="hero">
     <div class="hero-badge">📄 Photocopying &amp; Print Services</div>
     <h1>Fast prints,<br/><em>zero hassle.</em></h1>
     <p>Upload your documents directly here. We'll handle the rest — ready for pickup or delivery, your call.</p>
     <div class="hero-actions">
-      <button class="btn btn-primary" onclick="showView('view-order')">📤 Upload &amp; Order</button>
+      <form id="hero-form" action="https://formspree.io/f/mlgzbavn" method="POST" enctype="multipart/form-data" style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+        <input type="hidden" name="form_type" value="quick_upload">
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('quick-file').click()">📤 Upload &amp; Order</button>
+        <input type="file" id="quick-file" name="documents" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls,.ppt,.pptx" style="display:none;" onchange="submitQuickForm()">
+      </form>
       <button class="btn btn-secondary" onclick="showView('view-status')">🔍 Track My Order</button>
+    </div>
+  </div>
+
+  <script>
+    function submitQuickForm() {
+      const fileInput = document.getElementById('quick-file');
+      if (fileInput.files.length === 0) return;
+      
+      const formData = new FormData();
+      formData.append('form_type', 'quick_upload');
+      for (let file of fileInput.files) {
+        formData.append('documents', file);
+      }
+      
+      fetch('https://formspree.io/f/mlgzbavn', {
+        method: 'POST',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          showToast('📤 Files uploaded! We\'ll contact you soon.');
+          fileInput.value = '';
+        }
+      }).catch(err => showToast('❌ Upload failed. Please try again.'));
+    }
+  </script>
+
+  <div style="max-width:900px;margin:0 auto 3rem;padding:0 2.5rem;">
+    <div class="section-label">How It Works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Upload Your Files</h3>
+        <p>Drop your PDFs, Word docs, or images directly on our site. No WhatsApp, no email needed.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>We Print It</h3>
+        <p>Choose your specs — color, copies, size, binding. We'll process your order right away.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Pick Up or Deliver</h3>
+        <p>Track your order status online and collect when ready. Simple as that.</p>
+      </div>
     </div>
   </div>
 
@@ -1011,7 +1059,7 @@ nav { padding: 1rem 1.25rem; }
   </div>
 
   <div style="text-align:center;padding-bottom:4rem;color:var(--muted);font-size:0.82rem;">
-    <p>🕐 Mon–Sat 8am–9pm &nbsp;|&nbsp; 📍 Jl. Pdt. Justin Sihombing No. 34, Pematangsiantar &nbsp;|&nbsp; <button onclick="goAdmin()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.82rem;text-decoration:underline;">Owner Login</button></p>
+    <p>🕐 Setiap Hari 8am–9pm &nbsp;|&nbsp; 📍 Jl. Pdt. Justin Sihombing No. 34, Pematangsiantar &nbsp;|&nbsp; <button onclick="goAdmin()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.82rem;text-decoration:underline;">Owner Login</button></p>
   </div>
 </div>
 
